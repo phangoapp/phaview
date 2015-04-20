@@ -215,7 +215,8 @@ class View {
 	}
 	
 	/**
-	*
+	* Method for obtain a url for a media file.
+	* @param string $path_file The relative path of file with respect to $folder_end.'/'.$path_media
 	*/
 	
 	public function getMediaUrl($path_file)
@@ -362,6 +363,73 @@ class View {
 	
 	}
 	
+	/**
+	* Method that use $this->css array for create a series of html tags that load the css stylesheets
+	*
+	* This function is used inside of <head> html tag normally for load css files.
+	*/
+	
+	public function loadCSS()
+	{
+	
+		$arr_final_css=array();
+	
+		foreach($this->css as $css)
+		{
+			$url=$this->getMediaUrl('css/'.$css);
+		
+			$arr_final_css[]='<link href="'.$url.'" rel="stylesheet" type="text/css"/>'."\n";
+		
+		}
+		
+		return implode('', $arr_final_css);
+	
+	}
+	
+	/**
+	* Method that use $this->js array for create a series of html tags that load the javascript files
+	*
+	* This function is used inside of <head> html tag normally for load js files.
+	*/
+	
+	public function loadJS()
+	{
+	
+		$arr_final_js=array();
+	
+		foreach($this->js as $js)
+		{
+			$url=$this->getMediaUrl('js/'.$js);
+		
+			$arr_final_js[]=$arr_final_jscript[]='<script language="Javascript" src="'.$url.'"></script>'."\n";;
+		
+		}
+		
+		return implode('', $arr_final_js);
+	
+	}
+	
+	/**
+	* Method that use $this->header array for create a series of code (normally javascript) on <head> tag.
+	*
+	* This function is used inside of <head> html tag normally for load inline javascript code.
+	*/
+	
+	public function loadHeader()
+	{
+	
+		$arr_final_header=array();
+	
+		foreach($this->header as $header)
+		{
+		
+			$arr_final_header[]=$header."\n";
+		
+		}
+		
+		return implode('', $arr_final_header);
+	
+	}
 	
 }
 

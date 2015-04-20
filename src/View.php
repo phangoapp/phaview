@@ -168,7 +168,9 @@ class View {
 	}
 	
 	/**
+	* Method for create a url for access files via .php script
 	*
+	* @param string $path_file The relative path of file with respect to $folder_end.'/'.$path_media
 	*/
 	
 	public function dynamicGetMediaUrl($path_file)
@@ -179,6 +181,9 @@ class View {
 	}
 	
 	/**
+	* Method for create a url for access files via http server
+	*
+	* @param string $path_file The relative path of file with respect to $folder_end.'/'.$path_media
 	*
 	*/
 	
@@ -190,7 +195,9 @@ class View {
 	}
 	
 	/**
+	* Method for change the method for access to media files. 
 	*
+	* @param boolean $value Set the production property.If true then access to media files directly, if false, access to media files via specified .php script
 	*/
 	
 	public function setProduction($value=1)

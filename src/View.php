@@ -1,7 +1,7 @@
 <?php
 
-namespace PhaView;
-use PhaUtils\Utils;
+namespace PhangoApp\PhaView;
+use PhangoApp\PhaUtils\Utils;
 
 class View {
 

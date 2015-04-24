@@ -9,37 +9,37 @@ class View {
 	* Root path for includes app folders
 	*/
 	
-	public $root_path=__DIR__;
+	static public $root_path=__DIR__;
 	
 	/**
 	* A set of paths inside of $root_path contining views. If a view is located, the foreach for search the view is break
 	*/
 	
-	public $folder_env=array('views/default', 'app/views');
+	static public $folder_env=array('views/default', 'app/views');
 	
 	/**
 	* Array for caching the template call...
 	*/
 	
-	public $cache_template=array();
+	static public $cache_template=array();
 	
 	/**
 	* Path of static media files (javascript, images and css).
 	*/
 	
-	public $path_media='media';
+	static public $path_media='media';
 	
 	/**
 	* Url of static media files (javascript, images and css).
 	*/
 	
-	public $url_media='media';
+	static public $url_media='media';
 	
 	/**
 	* Media .php path.
 	*/
 	
-	public $php_file='showmedia.php';
+	static public $php_file='showmedia.php';
 
 	/**
 	* Internal property used for see if this media are in production
@@ -51,7 +51,7 @@ class View {
 	* Internal property used for define the method used for retrieve the media files.
 	*/
 	
-	protected $func_media='dynamicGetMediaUrl';
+	static protected $func_media='dynamicGetMediaUrl';
 	
 	/**
 	* An array where you can add new css in all views. For example, a view that use a special css can use this array and you can insert the value 'special.css' and the principal View can use loadCss method for load all css writed in the array by children views.
@@ -85,11 +85,11 @@ class View {
 		if(count($arr_arg)>0)
 		{
 			
-			$this->folder_env=$arr_arg;
+			View::$folder_env=$arr_arg;
 		
 		}
 	
-		$this->root_path=getcwd();
+		View::$root_path=getcwd();
 
 	}
 	
@@ -110,13 +110,13 @@ class View {
 		
 		$yes_cache=0;
 		
-		if(!isset($this->cache_template[$template])) 
+		if(!isset(View::$cache_template[$template])) 
 		{
 		
-			foreach($this->folder_env as $base_path)
+			foreach(View::$folder_env as $base_path)
 			{
 			
-				$view_path=$this->root_path.'/'.$base_path.'/'.$template.'.php';
+				$view_path=View::$root_path.'/'.$base_path.'/'.$template.'.php';
 				
 				if(is_file($view_path))
 				{
@@ -136,7 +136,7 @@ class View {
 			if($yes_cache==1)
 			{
 			
-				$this->cache_template[$template]=basename($template).'View';
+				View::$cache_template[$template]=basename($template).'View';
 				
 			}
 			else
@@ -151,7 +151,7 @@ class View {
 		
 		ob_start();
 
-		$func_view=$this->cache_template[$template];
+		$func_view=View::$cache_template[$template];
 		
 		//Load function from loaded view with his parameters
 		
@@ -176,7 +176,7 @@ class View {
 	public function dynamicGetMediaUrl($path_file)
 	{
 	
-		return $this->php_file.'/'.$path_file;
+		return View::$php_file.'/'.$path_file;
 	
 	}
 	
@@ -190,7 +190,7 @@ class View {
 	public function staticGetMediaUrl($path_file)
 	{
 	
-		return $this->url_media.'/'.$path_file;
+		return View::$url_media.'/'.$path_file;
 	
 	}
 	
@@ -200,14 +200,14 @@ class View {
 	* @param boolean $value Set the production property.If true then access to media files directly, if false, access to media files via specified .php script
 	*/
 	
-	public function setProduction($value=1)
+	static public function setProduction($value=1)
 	{
 	
 		if($value==1)
 		{
 			
 			$production=1;
-			$this->func_media='staticGetMediaUrl';
+			View::$func_media='staticGetMediaUrl';
 			
 		}
 		else
@@ -215,7 +215,7 @@ class View {
 		
 			$production=0;
 		
-			$this->func_media='dynamicGetMediaUrl';
+			View::$func_media='dynamicGetMediaUrl';
 		
 		}
 	
@@ -229,7 +229,7 @@ class View {
 	public function getMediaUrl($path_file)
 	{
 	
-		$func_media=$this->func_media;
+		$func_media=View::$func_media;
 		
 		return $this->$func_media($path_file);
 	
@@ -254,7 +254,7 @@ class View {
 		
 			$yes_file=0;
 			
-			$arr_url=explode($this->php_file.'/', $url);
+			$arr_url=explode(View::$php_file.'/', $url);
 			
 			$final_path='';
 			
@@ -282,10 +282,10 @@ class View {
 			
 			}
 			
-			foreach($this->folder_env as $folder)
+			foreach(View::$folder_env as $folder)
 			{
 			
-				$file_path=$this->root_path.'/'.$folder.'/'.$this->path_media.'/'.$final_path;
+				$file_path=View::$root_path.'/'.$folder.'/'.View::$path_media.'/'.$final_path;
 				
 				if(is_file($file_path))
 				{

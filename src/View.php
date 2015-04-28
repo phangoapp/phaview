@@ -15,7 +15,7 @@ class View {
 	* A set of paths inside of $root_path contining views. If a view is located, the foreach for search the view is break
 	*/
 	
-	static public $folder_env=array('views/default', 'app/views');
+	static public $folder_env=array('views/default');
 	
 	/**
 	* Array for caching the template call...

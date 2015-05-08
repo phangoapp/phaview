@@ -45,7 +45,7 @@ class View {
 	* Internal property used for see if this media are in production
 	*/
 	
-	protected $production=0;
+	static protected $production=0;
 	
 	/**
 	* Internal property used for define the method used for retrieve the media files.
@@ -57,19 +57,19 @@ class View {
 	* An array where you can add new css in all views. For example, a view that use a special css can use this array and you can insert the value 'special.css' and the principal View can use loadCss method for load all css writed in the array by children views.
 	*/
 	
-	public $css=array();
+	static public $css=array();
 	
 	/**
 	* An array where you can add new js in all views. For example, a view that use a special js can use this array and you can insert the value 'special.js' in principal View using loadJs method for load all js writed in the array by children views.
 	*/
 	
-	public $js=array();
+	static public $js=array();
 	
 	/**
 	* An array where you can add new code in <header> tag. For example, a view that need a initialitation code in the principal view can use this array and you can insert the code in principal View using loadHeader method for load all header code writed in the array by children views.
 	*/
 	
-	public $header=array();
+	static public $header=array();
 	
 	/**
 	* The construct for create a view object
@@ -77,7 +77,7 @@ class View {
 	* @param string $folder_base The folder used how base path for search view files
 	*/
 
-	public function __construct()
+	/*public function __construct()
 	{
 	
 		$arr_arg=func_get_args();
@@ -91,7 +91,7 @@ class View {
 	
 		View::$root_path=getcwd();
 
-	}
+	}*/
 	
 	/**
 	* Very important function used for load views. Is the V in the MVC paradigm. Phango is an MVC framework and has separate code and html.
@@ -103,7 +103,7 @@ class View {
 	* @param string $module_theme If the view are on a different theme and you don't want put the view on the theme, use this variable for go to the other theme.
 	*/
 
-	public function loadView($arr_template_values, $template)
+	static public function loadView($arr_template_values, $template)
 	{
 
 		//First see in controller/view/template, if not see in /views/template
@@ -155,7 +155,7 @@ class View {
 		
 		//Load function from loaded view with his parameters
 		
-		array_unshift($arr_template_values, $this);
+		//array_unshift($arr_template_values, $this);
 
 		call_user_func_array($func_view, $arr_template_values);
 
@@ -173,7 +173,7 @@ class View {
 	* @param string $path_file The relative path of file with respect to $folder_end.'/'.$path_media
 	*/
 	
-	public function dynamicGetMediaUrl($path_file)
+	static public function dynamicGetMediaUrl($path_file)
 	{
 	
 		return View::$php_file.'/'.$path_file;
@@ -187,7 +187,7 @@ class View {
 	*
 	*/
 	
-	public function staticGetMediaUrl($path_file)
+	static public function staticGetMediaUrl($path_file)
 	{
 	
 		return View::$url_media.'/'.$path_file;
@@ -226,12 +226,12 @@ class View {
 	* @param string $path_file The relative path of file with respect to $folder_end.'/'.$path_media
 	*/
 	
-	public function getMediaUrl($path_file)
+	static public function getMediaUrl($path_file)
 	{
 	
 		$func_media=View::$func_media;
 		
-		return $this->$func_media($path_file);
+		return View::$func_media($path_file);
 	
 	}
 	
@@ -244,12 +244,12 @@ class View {
 	*
 	*/
 	
-	public function loadMediaFile($url)
+	static public function loadMediaFile($url)
 	{
 	
 		//Check files origin.
 		
-		if($this->production==0)
+		if(View::$production==0)
 		{
 		
 			$yes_file=0;
@@ -376,14 +376,14 @@ class View {
 	* This function is used inside of <head> html tag normally for load css files.
 	*/
 	
-	public function loadCSS()
+	static public function loadCSS()
 	{
 	
 		$arr_final_css=array();
 	
-		foreach($this->css as $css)
+		foreach(View::$css as $css)
 		{
-			$url=$this->getMediaUrl('css/'.$css);
+			$url=View::getMediaUrl('css/'.$css);
 		
 			$arr_final_css[]='<link href="'.$url.'" rel="stylesheet" type="text/css"/>'."\n";
 		
@@ -399,14 +399,14 @@ class View {
 	* This function is used inside of <head> html tag normally for load js files.
 	*/
 	
-	public function loadJS()
+	static public function loadJS()
 	{
 	
 		$arr_final_js=array();
 	
-		foreach($this->js as $js)
+		foreach(View::$js as $js)
 		{
-			$url=$this->getMediaUrl('js/'.$js);
+			$url=View::getMediaUrl('js/'.$js);
 		
 			$arr_final_js[]=$arr_final_jscript[]='<script language="Javascript" src="'.$url.'"></script>'."\n";;
 		
@@ -422,12 +422,12 @@ class View {
 	* This function is used inside of <head> html tag normally for load inline javascript code.
 	*/
 	
-	public function loadHeader()
+	static public function loadHeader()
 	{
 	
 		$arr_final_header=array();
 	
-		foreach($this->header as $header)
+		foreach(View::$header as $header)
 		{
 		
 			$arr_final_header[]=$header."\n";
@@ -435,6 +435,18 @@ class View {
 		}
 		
 		return implode('', $arr_final_header);
+	
+	}
+	
+	/**
+	* A method for make a redirect based on a theme
+	*
+	*/
+	
+	static public function loadTheme($title, $cont_index)
+	{
+		
+		echo View::loadView(array($title, $cont_index),'home');
 	
 	}
 	

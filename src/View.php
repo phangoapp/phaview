@@ -271,7 +271,7 @@ class View {
 				for($x=0;$x<$c-1;$x++)
 				{
 				
-					$arr_path[$key_path]=Utils::slugify($item_path, $respect_upper=0, $replace_space='-', $replace_dot=1, $replace_barr=1);
+					$arr_path[$x]=Utils::slugify($arr_path[$x], $respect_upper=0, $replace_space='-', $replace_dot=1, $replace_barr=1);
 				
 				}
 				
@@ -289,6 +289,7 @@ class View {
 				
 				if(is_file($file_path))
 				{
+					
 					$yes_file=1;
 					
 					break;

@@ -382,6 +382,8 @@ class View {
 	
 		$arr_final_css=array();
 	
+		View::$css=array_unique(View::$css);
+	
 		foreach(View::$css as $css)
 		{
 			$url=View::getMediaUrl('css/'.$css);
@@ -404,6 +406,8 @@ class View {
 	{
 	
 		$arr_final_js=array();
+		
+		View::$js=array_unique(View::$js);
 	
 		foreach(View::$js as $js)
 		{
@@ -427,7 +431,7 @@ class View {
 	{
 	
 		$arr_final_header=array();
-	
+		
 		foreach(View::$header as $header)
 		{
 		
@@ -435,7 +439,7 @@ class View {
 		
 		}
 		
-		return implode('', $arr_final_header);
+		return implode("\n", $arr_final_header);
 	
 	}
 	
@@ -449,6 +453,98 @@ class View {
 		
 		echo View::loadView(array($title, $cont_index),'home');
 	
+	}
+	
+	/**
+	* Function for load multiple views for a only source file.
+	* 
+	* Useful for functions where you need separated views for use on something, When you use load_view for execute a view function, the names used for views are in $func_views array.
+	*
+	* @param string $template of the view library. Use the same format for normal views. 
+	* @param string The names of templates, used how template_name for call views with load_view.
+	*/
+
+	static public function loadLibrariesViews($template, $func_views=array())
+	{
+	
+		foreach(View::$folder_env as $base_path)
+		{
+		
+			$view_path=View::$root_path.'/'.$base_path.'/'.$template.'.php';
+			
+			if(is_file($view_path))
+			{
+			
+				include($view_path);
+				
+				foreach($func_views as $template)
+				{
+
+					View::$cache_template[$template]=basename($template).'View';
+
+				}
+				
+				break;
+			
+			}
+		
+		}
+		
+		/*$theme=PhangoVar::$dir_theme;
+
+		$container_theme=PhangoVar::$module_theme;
+		
+		$view='';
+
+		//Load views from a source file...
+		
+		//Check func views...
+		
+		$no_loaded=0;
+
+		foreach($func_views as $template_check)
+		{
+
+			if(isset(PhangoVar::$cache_template[$template_check]))
+			{
+				//Function view loaded, return because load_view load the function automatically.
+			
+				$no_loaded++;
+			
+			}
+
+		}
+		
+		if($no_loaded==0)
+		{	
+			if(!include_once(PhangoVar::$base_path.$container_theme.'views/'.$theme.'/'.strtolower($template).'.php')) 
+			{
+				
+				$output_error_view=ob_get_contents();
+
+				ob_clean();
+
+				if(!include_once(PhangoVar::$base_path.'modules/'.PhangoVar::$script_module.'/views/'.strtolower($template).'.php')) 
+				{
+
+					
+
+				}
+
+			}
+			
+		}
+		
+		//Forever register views if the code use different functions in a same library.
+		
+		foreach($func_views as $template)
+		{
+
+			PhangoVar::$cache_template[$template]=basename($template).'View';
+
+		}*/
+
+
 	}
 	
 }

@@ -547,6 +547,30 @@ class View {
 
 	}
 	
+	static public function set_flash($text)
+	{
+	
+		$_SESSION['flash_txt']=$text;
+	
+	}
+	
+	static public function show_flash()
+	{
+	
+		if(isset($_SESSION['flash_txt']))
+		{
+			if($_SESSION['flash_txt']!='')
+			{
+			
+				return View::loadView(array($_SESSION['flash_txt']), 'flash');
+				
+			}
+		}
+		
+		return '';
+	
+	}
+	
 }
 
 ?>

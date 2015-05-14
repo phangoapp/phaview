@@ -561,8 +561,11 @@ class View {
 		{
 			if($_SESSION['flash_txt']!='')
 			{
+				$text=$_SESSION['flash_txt'];
+				
+				$_SESSION['flash_txt']='';
 			
-				return View::loadView(array($_SESSION['flash_txt']), 'flash');
+				return View::loadView(array($text), 'common/utilities/flash');
 				
 			}
 		}

@@ -110,6 +110,8 @@ class View {
 		
 		$yes_cache=0;
 		
+		$all_path=array();
+		
 		if(!isset(View::$cache_template[$template])) 
 		{
 		
@@ -117,6 +119,8 @@ class View {
 			{
 			
 				$view_path=View::$root_path.'/'.$base_path.'/'.$template.'.php';
+				
+				$all_path[]=$view_path;
 				
 				if(is_file($view_path))
 				{
@@ -142,7 +146,7 @@ class View {
 			else
 			{
 			
-				throw new \Exception('Error: view not found: '.$view_path);
+				throw new \Exception('Error: view not found: '.implode(' and ', $all_path));
 				die;
 			
 			}
@@ -165,6 +169,17 @@ class View {
 		
 		return $out_template;
 
+	}
+	
+	/**
+	* Simple alias of load_view
+	*/
+	
+	static public function load_view($arr_template_values, $template)
+	{
+	
+		return View::loadView($arr_template_values, $template);
+	
 	}
 	
 	/**
@@ -382,13 +397,34 @@ class View {
 	
 		$arr_final_css=array();
 	
-		View::$css=array_unique(View::$css);
+		//View::$css=array_unique(View::$css);
 	
 		foreach(View::$css as $css)
 		{
-			$url=View::getMediaUrl('css/'.$css);
+			
+			if(gettype($css)=='array')
+			{
+				
+				$css=array_unique($css);
+				
+				foreach($css as $module => $css_item)
+				{
+				
+					$url=View::getMediaUrl('css/'.$css);
+				
+					$arr_final_css[]='<link href="'.$url.'" rel="stylesheet" type="text/css"/>'."\n";
+					
+				}
+				
+			}
+			else
+			{
 		
-			$arr_final_css[]='<link href="'.$url.'" rel="stylesheet" type="text/css"/>'."\n";
+				$url=View::getMediaUrl('css/'.$css);
+			
+				$arr_final_css[]='<link href="'.$url.'" rel="stylesheet" type="text/css"/>'."\n";
+				
+			}
 		
 		}
 		
@@ -407,13 +443,23 @@ class View {
 	
 		$arr_final_js=array();
 		
-		View::$js=array_unique(View::$js);
+		//View::$js=array_unique(View::$js);
 	
 		foreach(View::$js as $js)
 		{
-			$url=View::getMediaUrl('js/'.$js);
 		
-			$arr_final_js[]=$arr_final_jscript[]='<script language="Javascript" src="'.$url.'"></script>'."\n";;
+			if(gettype($js)=='array')
+			{
+				
+			}
+			else
+			{
+		
+				$url=View::getMediaUrl('js/'.$js);
+			
+				$arr_final_js[]=$arr_final_jscript[]='<script language="Javascript" src="'.$url.'"></script>'."\n";;
+				
+			}
 		
 		}
 		

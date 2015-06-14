@@ -51,7 +51,7 @@ class View {
 	* Internal property used for define the method used for retrieve the media files.
 	*/
 	
-	static protected $func_media='dynamicGetMediaUrl';
+	static protected $func_media='dynamic_get_media_url';
 	
 	/**
 	* An array where you can add new css in all views. For example, a view that use a special css can use this array and you can insert the value 'special.css' and the principal View can use loadCss method for load all css writed in the array by children views.
@@ -103,7 +103,7 @@ class View {
 	* @param string $module_theme If the view are on a different theme and you don't want put the view on the theme, use this variable for go to the other theme.
 	*/
 
-	static public function loadView($arr_template_values, $template)
+	static public function load_view($arr_template_values, $template)
 	{
 
 		//First see in controller/view/template, if not see in /views/template
@@ -172,23 +172,12 @@ class View {
 	}
 	
 	/**
-	* Simple alias of load_view
-	*/
-	
-	static public function load_view($arr_template_values, $template)
-	{
-	
-		return View::loadView($arr_template_values, $template);
-	
-	}
-	
-	/**
 	* Method for create a url for access files via .php script
 	*
 	* @param string $path_file The relative path of file with respect to $folder_end.'/'.$path_media
 	*/
 	
-	static public function dynamicGetMediaUrl($path_file)
+	static public function dynamic_get_media_url($path_file)
 	{
 	
 		return View::$php_file.'/'.$path_file;
@@ -202,7 +191,7 @@ class View {
 	*
 	*/
 	
-	static public function staticGetMediaUrl($path_file)
+	static public function static_get_media_url($path_file)
 	{
 	
 		return View::$url_media.'/'.$path_file;
@@ -215,14 +204,14 @@ class View {
 	* @param boolean $value Set the production property.If true then access to media files directly, if false, access to media files via specified .php script
 	*/
 	
-	static public function setProduction($value=1)
+	static public function set_production($value=1)
 	{
 	
 		if($value==1)
 		{
 			
 			$production=1;
-			View::$func_media='staticGetMediaUrl';
+			View::$func_media='static_get_media_url';
 			
 		}
 		else
@@ -230,7 +219,7 @@ class View {
 		
 			$production=0;
 		
-			View::$func_media='dynamicGetMediaUrl';
+			View::$func_media='dynamic_get_media_url';
 		
 		}
 	
@@ -241,7 +230,7 @@ class View {
 	* @param string $path_file The relative path of file with respect to $folder_end.'/'.$path_media
 	*/
 	
-	static public function getMediaUrl($path_file)
+	static public function get_media_url($path_file)
 	{
 	
 		$func_media=View::$func_media;
@@ -259,7 +248,7 @@ class View {
 	*
 	*/
 	
-	static public function loadMediaFile($url)
+	static public function load_media_file($url)
 	{
 	
 		//Check files origin.
@@ -392,7 +381,7 @@ class View {
 	* This function is used inside of <head> html tag normally for load css files.
 	*/
 	
-	static public function loadCSS()
+	static public function load_css()
 	{
 	
 		$arr_final_css=array();
@@ -410,7 +399,7 @@ class View {
 				foreach($css as $module => $css_item)
 				{
 				
-					$url=View::getMediaUrl('css/'.$css);
+					$url=View::get_media_url('css/'.$css);
 				
 					$arr_final_css[]='<link href="'.$url.'" rel="stylesheet" type="text/css"/>'."\n";
 					
@@ -420,7 +409,7 @@ class View {
 			else
 			{
 		
-				$url=View::getMediaUrl('css/'.$css);
+				$url=View::get_media_url('css/'.$css);
 			
 				$arr_final_css[]='<link href="'.$url.'" rel="stylesheet" type="text/css"/>'."\n";
 				
@@ -438,7 +427,7 @@ class View {
 	* This function is used inside of <head> html tag normally for load js files.
 	*/
 	
-	static public function loadJS()
+	static public function load_js()
 	{
 	
 		$arr_final_js=array();
@@ -455,7 +444,7 @@ class View {
 			else
 			{
 		
-				$url=View::getMediaUrl('js/'.$js);
+				$url=View::get_media_url('js/'.$js);
 			
 				$arr_final_js[]=$arr_final_jscript[]='<script language="Javascript" src="'.$url.'"></script>'."\n";;
 				
@@ -473,7 +462,7 @@ class View {
 	* This function is used inside of <head> html tag normally for load inline javascript code.
 	*/
 	
-	static public function loadHeader()
+	static public function load_header()
 	{
 	
 		$arr_final_header=array();
@@ -494,10 +483,10 @@ class View {
 	*
 	*/
 	
-	static public function loadTheme($title, $cont_index)
+	static public function load_theme($title, $cont_index)
 	{
 		
-		echo View::loadView(array($title, $cont_index),'home');
+		echo View::load_view(array($title, $cont_index),'home');
 	
 	}
 	
@@ -510,7 +499,7 @@ class View {
 	* @param string The names of templates, used how template_name for call views with load_view.
 	*/
 
-	static public function loadLibrariesViews($template, $func_views=array())
+	static public function load_libraries_views($template, $func_views=array())
 	{
 	
 		foreach(View::$folder_env as $base_path)
@@ -535,60 +524,6 @@ class View {
 			}
 		
 		}
-		
-		/*$theme=PhangoVar::$dir_theme;
-
-		$container_theme=PhangoVar::$module_theme;
-		
-		$view='';
-
-		//Load views from a source file...
-		
-		//Check func views...
-		
-		$no_loaded=0;
-
-		foreach($func_views as $template_check)
-		{
-
-			if(isset(PhangoVar::$cache_template[$template_check]))
-			{
-				//Function view loaded, return because load_view load the function automatically.
-			
-				$no_loaded++;
-			
-			}
-
-		}
-		
-		if($no_loaded==0)
-		{	
-			if(!include_once(PhangoVar::$base_path.$container_theme.'views/'.$theme.'/'.strtolower($template).'.php')) 
-			{
-				
-				$output_error_view=ob_get_contents();
-
-				ob_clean();
-
-				if(!include_once(PhangoVar::$base_path.'modules/'.PhangoVar::$script_module.'/views/'.strtolower($template).'.php')) 
-				{
-
-					
-
-				}
-
-			}
-			
-		}
-		
-		//Forever register views if the code use different functions in a same library.
-		
-		foreach($func_views as $template)
-		{
-
-			PhangoVar::$cache_template[$template]=basename($template).'View';
-
-		}*/
 
 
 	}
@@ -611,7 +546,7 @@ class View {
 				
 				$_SESSION['flash_txt']='';
 			
-				return View::loadView(array($text), 'common/utilities/flash');
+				return View::load_view(array($text), 'common/utilities/flash');
 				
 			}
 		}

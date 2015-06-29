@@ -18,6 +18,18 @@ class View {
 	static public $folder_env=array('views/default');
 	
 	/**
+	* A set of paths inside of $root_path contining views. If a view is located, the foreach for search the view is break
+	*/
+	
+	static public $media_env=array('views/default');
+	
+	/**
+	* Basepath of the theme
+	*/
+	
+	static public $theme='';
+	
+	/**
 	* Array for caching the template call...
 	*/
 	
@@ -191,10 +203,19 @@ class View {
 	*
 	*/
 	
-	static public function static_get_media_url($path_file)
+	static public function static_get_media_url($path_file, $module='')
 	{
-	
-		return View::$url_media.'/'.$path_file;
+		
+		//Need that the paths was theme/media and theme/module/media
+		
+		if($module!='')
+		{
+		
+			$module.='/';
+		
+		}
+		
+		return View::$url_media.'media/'.View::$theme.'/'.$module.$path_file;
 	
 	}
 	
@@ -230,12 +251,12 @@ class View {
 	* @param string $path_file The relative path of file with respect to $folder_end.'/'.$path_media
 	*/
 	
-	static public function get_media_url($path_file)
+	static public function get_media_url($path_file, $module='')
 	{
-	
+		
 		$func_media=View::$func_media;
 		
-		return View::$func_media($path_file);
+		return View::$func_media($path_file, $module);
 	
 	}
 	
@@ -286,7 +307,7 @@ class View {
 			
 			}
 			
-			foreach(View::$folder_env as $folder)
+			foreach(View::$media_env as $folder)
 			{
 			
 				$file_path=View::$root_path.'/'.$folder.'/'.View::$path_media.'/'.$final_path;
@@ -388,7 +409,7 @@ class View {
 	
 		//View::$css=array_unique(View::$css);
 	
-		foreach(View::$css as $css)
+		foreach(View::$css as $module_css => $css)
 		{
 			
 			if(gettype($css)=='array')
@@ -399,7 +420,7 @@ class View {
 				foreach($css as $module => $css_item)
 				{
 				
-					$url=View::get_media_url('css/'.$css);
+					$url=View::get_media_url('css/'.$css_item, $module_css);
 				
 					$arr_final_css[]='<link href="'.$url.'" rel="stylesheet" type="text/css"/>'."\n";
 					
@@ -434,11 +455,22 @@ class View {
 		
 		//View::$js=array_unique(View::$js);
 	
-		foreach(View::$js as $js)
+		foreach(View::$js as $module_js => $js)
 		{
 		
 			if(gettype($js)=='array')
 			{
+			
+				$js=array_unique($js);
+				
+				foreach($js as $module => $js_item)
+				{
+				
+					$url=View::get_media_url('js/'.$js_item, $module_js);
+				
+					$arr_final_js[]=$arr_final_jscript[]='<script language="Javascript" src="'.$url.'"></script>'."\n";
+					
+				}
 				
 			}
 			else
@@ -446,7 +478,7 @@ class View {
 		
 				$url=View::get_media_url('js/'.$js);
 			
-				$arr_final_js[]=$arr_final_jscript[]='<script language="Javascript" src="'.$url.'"></script>'."\n";;
+				$arr_final_js[]=$arr_final_jscript[]='<script language="Javascript" src="'.$url.'"></script>'."\n";
 				
 			}
 		

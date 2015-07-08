@@ -72,10 +72,22 @@ class View {
 	static public $css=array();
 	
 	/**
+	* An array where you can add new css in all views from modules. For example, a view that use a special css can use this array and you can insert the value 'special.css' and the principal View can use load_css method for load all css writed in the array by children views.
+	*/
+	
+	static public $css_module=array();
+	
+	/**
 	* An array where you can add new js in all views. For example, a view that use a special js can use this array and you can insert the value 'special.js' in principal View using loadJs method for load all js writed in the array by children views.
 	*/
 	
 	static public $js=array();
+	
+	/**
+	* An array where you can add new js in all views. For example, a view that use a special js can use this array and you can insert the value 'special.js' in principal View using load_js method for load all js writed in the array by children views.
+	*/
+	
+	static public $js_module=array();
 	
 	/**
 	* An array where you can add new code in <header> tag. For example, a view that need a initialitation code in the principal view can use this array and you can insert the code in principal View using loadHeader method for load all header code writed in the array by children views.
@@ -407,35 +419,29 @@ class View {
 	
 		$arr_final_css=array();
 	
-		//View::$css=array_unique(View::$css);
+		View::$css=array_unique(View::$css);
 	
-		foreach(View::$css as $module_css => $css)
+		foreach(View::$css as $css)
 		{
 			
-			if(gettype($css)=='array')
-			{
-				
-				$css=array_unique($css);
-				
-				foreach($css as $module => $css_item)
-				{
-				
-					$url=View::get_media_url('css/'.$css_item, $module_css);
-				
-					$arr_final_css[]='<link href="'.$url.'" rel="stylesheet" type="text/css"/>'."\n";
-					
-				}
-				
-			}
-			else
-			{
+			$url=View::get_media_url('css/'.$css);
 		
-				$url=View::get_media_url('css/'.$css);
+			$arr_final_css[]='<link href="'.$url.'" rel="stylesheet" type="text/css"/>'."\n";
+		
+		}
+		
+		foreach(View::$css_module as $module_css => $css)
+		{
+			$css=array_unique($css);
+				
+			foreach($css as $module => $css_item)
+			{
+			
+				$url=View::get_media_url('css/'.$css_item, $module_css);
 			
 				$arr_final_css[]='<link href="'.$url.'" rel="stylesheet" type="text/css"/>'."\n";
 				
 			}
-		
 		}
 		
 		return implode('', $arr_final_css);
@@ -453,35 +459,29 @@ class View {
 	
 		$arr_final_js=array();
 		
-		//View::$js=array_unique(View::$js);
+		View::$js=array_unique(View::$js);
 	
 		foreach(View::$js as $module_js => $js)
 		{
 		
-			if(gettype($js)=='array')
+			$url=View::get_media_url('js/'.$js);
+		
+			$arr_final_js[]=$arr_final_jscript[]='<script language="Javascript" src="'.$url.'"></script>'."\n";
+		
+		}
+		
+		foreach(View::$js_module as $module_js => $js)
+		{
+			$js=array_unique($js);
+				
+			foreach($js as $module => $js_item)
 			{
 			
-				$js=array_unique($js);
+				$url=View::get_media_url('js/'.$js_item, $module_js);
 				
-				foreach($js as $module => $js_item)
-				{
-				
-					$url=View::get_media_url('js/'.$js_item, $module_js);
-				
-					$arr_final_js[]=$arr_final_jscript[]='<script language="Javascript" src="'.$url.'"></script>'."\n";
-					
-				}
+				$arr_final_js[]='<script language="Javascript" src="'.$url.'"></script>'."\n";
 				
 			}
-			else
-			{
-		
-				$url=View::get_media_url('js/'.$js);
-			
-				$arr_final_js[]=$arr_final_jscript[]='<script language="Javascript" src="'.$url.'"></script>'."\n";
-				
-			}
-		
 		}
 		
 		return implode('', $arr_final_js);

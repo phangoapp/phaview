@@ -9,7 +9,7 @@ class View {
 	* Root path for includes app folders
 	*/
 	
-	static public $root_path=__DIR__;
+	static public $root_path=".";
 	
 	/**
 	* A set of paths inside of $root_path contining views. If a view is located, the foreach for search the view is break
@@ -96,6 +96,12 @@ class View {
 	static public $header=array();
 	
 	/**
+	* An array with config_paths for load configurations.
+	*/
+	
+	static public $config_path=['settings'];
+	
+	/**
 	* The construct for create a view object
 	*
 	* @param string $folder_base The folder used how base path for search view files
@@ -116,6 +122,19 @@ class View {
 		View::$root_path=getcwd();
 
 	}*/
+	
+	static public function load_config()
+	{
+	
+        //Load config here
+        foreach(View::config_path as $config)
+        {
+        
+            Utils::load_config("config_views", $config);
+        
+        }
+	
+	}
 	
 	/**
 	* Very important function used for load views. Is the V in the MVC paradigm. Phango is an MVC framework and has separate code and html.
@@ -180,6 +199,14 @@ class View {
 		ob_start();
 
 		$func_view=View::$cache_template[$template];
+		
+		if(!function_exists($func_view))
+		{
+		
+			throw new \Exception('Error: Template file loaded but function '.$func_view.' not found: '.implode(' and ', $all_path));
+			die;
+		
+		}
 		
 		//Load function from loaded view with his parameters
 		

@@ -605,7 +605,7 @@ class View {
 				
 				$_SESSION['flash_txt']='';
 			
-				return View::load_view(array($text), 'common/utilities/flash');
+				return View::load_view(array($text), 'common/utils/flash');
 				
 			}
 		}

@@ -146,7 +146,7 @@ class View {
 	* @param string $module_theme If the view are on a different theme and you don't want put the view on the theme, use this variable for go to the other theme.
 	*/
 
-	static public function load_view($arr_template_values, $template)
+	static public function load_view($arr_template_values, $template, $module='')
 	{
 
 		//First see in controller/view/template, if not see in /views/template
@@ -158,9 +158,18 @@ class View {
 		if(!isset(View::$cache_template[$template])) 
 		{
 		
+            if($module!='')
+            {
+            
+                //vendor/phangoapp/admin/views
+                View::$folder_env[]='vendor/'.$module.'/views';
+                
+            
+            }
+		
 			foreach(View::$folder_env as $base_path)
 			{
-			
+                
 				$view_path=View::$root_path.'/'.$base_path.'/'.$template.'.php';
 				
 				$all_path[]=$view_path;

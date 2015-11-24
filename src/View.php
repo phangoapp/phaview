@@ -327,6 +327,8 @@ class View {
 		
 			$yes_file=0;
 			
+			$url=preg_replace('/\?.*$/', '', $url);
+			
 			$arr_url=explode(View::$php_file.'/', $url);
 			
 			$final_path='';

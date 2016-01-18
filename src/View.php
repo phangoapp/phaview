@@ -598,12 +598,20 @@ class View {
 
 	}
 	
+	/**
+	* Method for set the flash message
+    */
+	
 	static public function set_flash($text)
 	{
 	
 		$_SESSION['flash_txt']=$text;
 	
 	}
+	
+	/**
+	* Method for show the flash message
+	*/
 	
 	static public function show_flash()
 	{
@@ -622,6 +630,17 @@ class View {
 		}
 		
 		return '';
+	
+	}
+	
+	/**
+	* Method for escape the variables in an view
+	*/
+	
+	static public function e($text)
+	{
+	
+        return Utils::form_text($text);
 	
 	}
 	

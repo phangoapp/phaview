@@ -304,9 +304,13 @@ class View {
                                 
         $file=file_get_contents($view_real_path);
         
-        $file=preg_replace('/<\?=(.*?)\|\?>/', '<?php PhangoApp\PhaView\View::d($1); ?>', $file);
+        #<?php echo "([^\\"]*);([^\\"]*)"
         
-        $file=preg_replace('/<\?php echo\s+(.*?)\|n;/', '<?php PhangoApp\PhaView\View::d($1);', $file);
+        $file=preg_replace('/<\?php echo "([^\\"]*?);+([^\\"]*?)"/', '/<?php echo /', $file);
+        
+        $file=preg_replace('/<\?=(.*?)\|n\?>/', '<?php PhangoApp\PhaView\View::d($1); ?>', $file);
+        
+        $file=preg_replace('/<\?php echo\s+([^;]*?);\|n/', '<?php PhangoApp\PhaView\View::d($1);', $file);
         
         $file=preg_replace('/<\?=(.*?)\?>/', '<?=PhangoApp\PhaView\View::e($1)?>', $file);
         

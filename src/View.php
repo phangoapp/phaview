@@ -100,7 +100,25 @@ class View {
 	*/
 	
 	static public $config_path=['settings'];
+    
+    /**
+    * A boolean property for set if views are escaped by default
+    */
+    
+    static public $escape=true;
+    
+    /**
+    * The directory where formatted views are saved.
+    */
 	
+    static public $cache_directory='cache/templates';
+    
+    /**
+    * Debug 
+    */
+	
+    static public $debug_tpl=false;
+    
 	/**
 	* The construct for create a view object
 	*
@@ -146,7 +164,7 @@ class View {
 	* @param string $module_theme If the view are on a different theme and you don't want put the view on the theme, use this variable for go to the other theme.
 	*/
 
-	static public function load_view($arr_template_values, $template, $module='')
+	static public function load_view($arr_template_values, $template, $module='', $escape=true)
 	{
 
 		//First see in controller/view/template, if not see in /views/template
@@ -170,19 +188,67 @@ class View {
 			foreach(View::$folder_env as $base_path)
 			{
                 
-				$view_path=View::$root_path.'/'.$base_path.'/'.$template.'.php';
+				$view_real_path=View::$root_path.'/'.$base_path.'/'.$template.'.php';
+                
+                $view_path=View::$root_path.'/'.View::$cache_directory.'/'.$base_path.'/'.$template.'.php';
 				
-				$all_path[]=$view_path;
+				$all_path[]=$view_real_path;
+                
+                $all_cache_path[]=$view_path;
 				
-				if(is_file($view_path))
+				if(is_file($view_real_path))
 				{
 				
-					include($view_path);
-					
-					$yes_cache=1;
-					
-					break;
-				
+                    //If escape then get 
+                    
+                    if(View::$escape==true && $escape==true)
+                    {
+                    
+                        if(!is_file($view_path))
+                        {
+                            
+                            $directory_cache=View::$root_path.'/'.View::$cache_directory.'/'.$base_path.'/'.dirname($template);
+                            
+                            if(!is_dir($directory_cache))
+                            {
+                                
+                                if(!mkdir($directory_cache, 0755, true))
+                                {
+                                    
+                                    throw new \Exception('Error: directory cache cant be created: '.$directory_cache);
+                                    
+                                    die;
+                                    
+                                }
+
+                            }
+                                
+                            View::add_cache_file($view_real_path, $view_path);
+                            
+                        }
+                        elseif(View::$debug_tpl) {
+                            
+                            $time_cached=filemtime($view_path);
+                            
+                            $time_real_cached=filemtime($view_real_path);
+                            
+                            if($time_real_cached>$time_cached)
+                            {
+                                
+                                View::add_cache_file($view_real_path, $view_path);
+                                
+                            }
+                            
+                        }
+                    
+                    }
+
+                    include($view_path);
+                        
+                    $yes_cache=1;
+                        
+                    break;
+                
 				}
 			
 			}
@@ -198,7 +264,7 @@ class View {
 			else
 			{
 			
-				throw new \Exception('Error: view not found: '.implode(' and ', $all_path));
+				throw new \Exception('Error: view not found: '.implode(' and ', $all_path).' and cached templates '.implode(' and ', $all_cache_path));
 				die;
 			
 			}
@@ -212,7 +278,7 @@ class View {
 		if(!function_exists($func_view))
 		{
 		
-			throw new \Exception('Error: Template file loaded but function '.$func_view.' not found: '.implode(' and ', $all_path));
+			throw new \Exception('Error: Template file loaded but function '.$func_view.' not found: '.implode(' and ', $all_path).' and cached templates '.implode(' and ', $all_cache_path));
 			die;
 		
 		}
@@ -231,6 +297,32 @@ class View {
 
 	}
 	
+    static public function add_cache_file($view_real_path, $view_path)
+    {
+        
+        //Create the cache file
+                                
+        $file=file_get_contents($view_real_path);
+        
+        $file=preg_replace('/<\?=(.*?)\|\?>/', '<?php PhangoApp\PhaView\View::d($1); ?>', $file);
+        
+        $file=preg_replace('/<\?php echo\s+(.*?)\|n;/', '<?php PhangoApp\PhaView\View::d($1);', $file);
+        
+        $file=preg_replace('/<\?=(.*?)\?>/', '<?=PhangoApp\PhaView\View::e($1)?>', $file);
+        
+        $file=preg_replace('/<\?php echo\s+(.*?);/', '<?php echo PhangoApp\PhaView\View::e($1);', $file);
+        
+        if(!file_put_contents($view_path, $file))
+        {
+            
+            throw new \Exception('Error: file cache cannot be created: '.$view_path);
+            
+            die;
+            
+        }
+        
+    }
+    
 	/**
 	* Method for create a url for access files via .php script
 	*
@@ -641,6 +733,13 @@ class View {
 	{
 	
         return Utils::form_text($text);
+	
+	}
+    
+    static public function d($text)
+	{
+	
+        echo $text;
 	
 	}
 	

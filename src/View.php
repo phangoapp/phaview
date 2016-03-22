@@ -189,7 +189,7 @@ class View {
 			{
                 
 				$view_real_path=View::$root_path.'/'.$base_path.'/'.$template.'.php';
-                
+                /*
                 $view_path=View::$root_path.'/'.View::$cache_directory.'/'.$base_path.'/'.$template.'.php';
 				
 				$all_path[]=$view_real_path;
@@ -241,9 +241,12 @@ class View {
                             
                         }
                     
-                    }
+                    }*/
+                    
+                if(is_file($view_real_path))
+				{
 
-                    include($view_path);
+                    include($view_real_path);
                         
                     $yes_cache=1;
                         

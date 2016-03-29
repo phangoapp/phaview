@@ -243,6 +243,8 @@ class View {
                     
                     }*/
                     
+                $all_path[]=$view_real_path;
+                    
                 if(is_file($view_real_path))
 				{
 
@@ -267,7 +269,7 @@ class View {
 			else
 			{
 			
-				throw new \Exception('Error: view not found: '.implode(' and ', $all_path).' and cached templates '.implode(' and ', $all_cache_path));
+				throw new \Exception('Error: view not found: '.implode(' and ', $all_path));
 				die;
 			
 			}
@@ -281,7 +283,7 @@ class View {
 		if(!function_exists($func_view))
 		{
 		
-			throw new \Exception('Error: Template file loaded but function '.$func_view.' not found: '.implode(' and ', $all_path).' and cached templates '.implode(' and ', $all_cache_path));
+			throw new \Exception('Error: Template file loaded but function '.$func_view.' not found: '.implode(' and ', $all_path));
 			die;
 		
 		}

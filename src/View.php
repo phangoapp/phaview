@@ -519,6 +519,12 @@ class View {
 						$type_mime='image/jpg';
 					
 					break;
+                    
+                    case 'html':
+					
+						$type_mime='text/html';
+					
+					break;
 				
 				}
 				

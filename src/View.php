@@ -189,7 +189,7 @@ class View {
 			{
                 
 				$view_real_path=View::$root_path.'/'.$base_path.'/'.$template.'.php';
-                /*
+                
                 $view_path=View::$root_path.'/'.View::$cache_directory.'/'.$base_path.'/'.$template.'.php';
 				
 				$all_path[]=$view_real_path;
@@ -198,10 +198,37 @@ class View {
 				
 				if(is_file($view_real_path))
 				{
+                    if(View::$escape==true && $escape==true)
+                    {
+                    
+                        if(!is_file($view_path))
+                        {
+                            
+                            $directory_cache=View::$root_path.'/'.View::$cache_directory.'/'.$base_path.'/'.dirname($template);
+                            
+                            if(!is_dir($directory_cache))
+                            {
+                                
+                                if(!mkdir($directory_cache, 0755, true))
+                                {
+                                    
+                                    throw new \Exception('Error: directory cache cant be created: '.$directory_cache);
+                                    
+                                    die;
+                                    
+                                }
+
+                            }
+                            
+                            
+                            
+                        }
 				
+                    }
+                }
                     //If escape then get 
                     
-                    if(View::$escape==true && $escape==true)
+                    /*if(View::$escape==true && $escape==true)
                     {
                     
                         if(!is_file($view_path))
@@ -311,7 +338,7 @@ class View {
         
         #<?php echo "([^\\"]*);([^\\"]*)"
         
-        $file=preg_replace('/<\?php echo "([^\\"]*?);+([^\\"]*?)"/', '/<?php echo /', $file);
+        /*$file=preg_replace('/<\?php echo "([^\\"]*?);+([^\\"]*?)"/', '/<?php echo /', $file);
         
         $file=preg_replace('/<\?=(.*?)\|n\?>/', '<?php PhangoApp\PhaView\View::d($1); ?>', $file);
         
@@ -319,7 +346,9 @@ class View {
         
         $file=preg_replace('/<\?=(.*?)\?>/', '<?=PhangoApp\PhaView\View::e($1)?>', $file);
         
-        $file=preg_replace('/<\?php echo\s+(.*?);/', '<?php echo PhangoApp\PhaView\View::e($1);', $file);
+        $file=preg_replace('/<\?php echo\s+(.*?);/', '<?php echo PhangoApp\PhaView\View::e($1);', $file);*/
+        
+        $file=preg_replace('/%\\{\w+?\}"/', '/View::e()/', $file);
         
         if(!file_put_contents($view_path, $file))
         {
@@ -746,8 +775,10 @@ class View {
 	
 	static public function e($text)
 	{
+        
+        $text=htmlspecialchars($text);
 	
-        return Utils::form_text($text);
+        return $text;
 	
 	}
     

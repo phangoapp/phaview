@@ -105,7 +105,7 @@ class View {
     * A boolean property for set if views are escaped by default
     */
     
-    static public $escape=true;
+    static public $escape=false;
     
     /**
     * The directory where formatted views are saved.

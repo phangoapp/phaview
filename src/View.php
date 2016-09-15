@@ -198,7 +198,7 @@ class View {
 				
 				if(is_file($view_real_path))
 				{
-                    if(View::$escape==true && $escape==true)
+                    /*if(View::$escape==true && $escape==true)
                     {
                     
                         if(!is_file($view_path))
@@ -224,7 +224,7 @@ class View {
                             
                         }
 				
-                    }
+                    }*/
                 }
                     //If escape then get 
                     
